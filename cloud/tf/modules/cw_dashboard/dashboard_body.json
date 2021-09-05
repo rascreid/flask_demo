@@ -1,0 +1,116 @@
+{
+  "widgets": [
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [
+            "AWS/ECS",
+            "CPUUtilization",
+            "ClusterName",
+            "${ecs_cluster_name}"
+          ]
+        ],
+        "period": 60,
+        "stat": "Average",
+        "region": "${aws_region}",
+        "title": "ECS CPU Utilization"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 13,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [
+            "AWS/ECS",
+            "MemoryUtilization",
+            "ClusterName",
+            "${ecs_cluster_name}"
+          ]
+        ],
+        "period": 60,
+        "stat": "Average",
+        "region": "${aws_region}",
+        "title": "ECS Memory Utilization"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 7,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [
+            "${metric_namespace}",
+            "2xxCount"
+          ]
+        ],
+        "period": 60,
+        "stat": "SampleCount",
+        "stacked": true,
+        "region": "${aws_region}",
+        "title": "HTTP 2xx count"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 13,
+      "y": 7,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [
+            "${metric_namespace}",
+            "4xxCount"
+          ]
+        ],
+        "period": 300,
+        "stat": "SampleCount",
+        "stacked": true,
+        "region": "${aws_region}",
+        "title": "HTTP 4xx count"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 21,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [
+            "${metric_namespace}",
+            "5xxCount"
+          ]
+        ],
+        "period": 300,
+        "stat": "SampleCount",
+        "stacked": true,
+        "region": "${aws_region}",
+        "title": "HTTP 5xx count"
+      }
+    },
+    {
+      "type": "text",
+      "x": 0,
+      "y": 95,
+      "width": 3,
+      "height": 3,
+      "properties": {
+        "markdown": "Hello world"
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+pipeline {
+  agent any
+  options {
+      ansiColor('xterm')
+  }
+  parameters {
+    choice(name: 'REGION', choices: ['us-east-1', 'eu-west-1'], description: 'Choose region')
+  }
+  environment {
+      AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
+      AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+      AWS_DEFAULT_REGION    = "us-east-1"
+      ENVIRONMENT_TYPE      = "dev"
+      AWS_REGION            = "${params.REGION}"
+  }
+  stages {
+    stage('Check environment') {
+      steps {
+        // Check AWS CLI is installed
+        sh "aws --version"
+        // Check git is installed
+        sh "git --version"
+        // Check terraform is installed
+        sh "terraform version"
+      }
+    }
+    stage('Destroy Common AWS env') {
+      steps {
+        sh 'rm -rf flask_demo'
+        sh 'git clone -b dev https://github.com/kegfru/flask_demo.git'
+        dir("flask_demo/cloud/tf/common") {
+          sh "terraform init -backend-config='bucket=flask-dev-use1' -backend-config='key=tf_states_${env.AWS_REGION}/terraform.tfstate' -backend-config='region=us-east-1' -reconfigure"
+          sh "terraform validate"
+          sh "terraform destroy -var='environment_type=${env.ENVIRONMENT_TYPE}' -var='aws_region=${env.AWS_REGION}' -var-file=terraform.tfvars -auto-approve"
+        }
+      }
+    }
+    // stage('Delete initial S3 bucket') {
+    //   steps {
+    //     timeout(time: 5, unit: 'MINUTES') {
+    //       retry(3){
+    //         sh "aws s3api delete-bucket --bucket flask-dev-use1 --region us-east-1"
+    //       }
+    //     }
+    //   }
+    // }
+  }
+  post {
+    always {
+      cleanWs()
+    }
+  }
+}
