@@ -11,3 +11,5 @@
 # locks
 *.tfstate
 *.lock.*
+
+jenkins
