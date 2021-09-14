@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "component_name" {
   type        = string
   description = "Application Prefix"
-  default     = "flask"
+  default     = "r-flask"
 }
 
 variable "environment_type" {
